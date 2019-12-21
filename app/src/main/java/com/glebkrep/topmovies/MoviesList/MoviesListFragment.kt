@@ -2,19 +2,17 @@ package com.glebkrep.topmovies.MoviesList
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.glebkrep.topmovies.API.RetrofitClient
+import androidx.recyclerview.widget.RecyclerView
 import com.glebkrep.topmovies.MainActivity
 import com.glebkrep.topmovies.R
 import kotlinx.android.synthetic.main.fragment_movies_list.*
-import javax.security.auth.callback.Callback
+
 
 /**
  * A simple [Fragment] subclass.
@@ -40,11 +38,21 @@ class MoviesListFragment : Fragment() {
         movies_list_recycle_view.layoutManager = LinearLayoutManager(context)
         movies_list_recycle_view.adapter = adapter
 
-        viewModel.fetchMovies()
+        viewModel.getMovies()
 
         viewModel.popularMoviesLiveData.observe(this, Observer {
             adapter.setMoviesList(it)
 
+        })
+
+
+        movies_list_recycle_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1)) {
+                    viewModel.getMoreMovies()
+                }
+            }
         })
 
 

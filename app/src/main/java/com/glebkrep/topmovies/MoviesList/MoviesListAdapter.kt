@@ -39,7 +39,11 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
         holder.ratingTextView.text = (current.vote_average*10).toString()
         holder.releaseDateTextView.text = current.release_date
 
-
+        Glide.with(parentFragment)
+            .load("https://image.tmdb.org/t/p/w500/"+current.poster_path)
+            .placeholder(R.drawable.ic_launcher_background)
+            .error(R.drawable.ic_launcher_foreground)
+            .into(holder.imageImageView)
     }
 
     internal fun setMoviesList(moviesList:List<MovieModel>){

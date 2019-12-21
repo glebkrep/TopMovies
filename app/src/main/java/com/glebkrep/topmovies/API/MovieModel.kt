@@ -1,5 +1,7 @@
 package com.glebkrep.topmovies.API
 
+import java.util.*
+
 data class MovieModel(
     val id: Int,
     val vote_average: Double,
