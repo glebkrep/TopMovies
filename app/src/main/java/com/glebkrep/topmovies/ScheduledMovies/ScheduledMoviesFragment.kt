@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
+import androidx.work.WorkerParameters
 import com.glebkrep.topmovies.API.MovieModel
 import com.glebkrep.topmovies.MainActivity
 import com.glebkrep.topmovies.MainActivityViewModel
@@ -18,6 +20,7 @@ import com.glebkrep.topmovies.Notifications.NotifyWorker
 import com.glebkrep.topmovies.R
 import com.glebkrep.topmovies.Repository.MovieItem
 import kotlinx.android.synthetic.main.fragment_scheduled_movies.*
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -60,10 +63,21 @@ class ScheduledMoviesFragment : Fragment() {
     fun addToScheduled(movie:MovieItem){
         //todo: add
 
-        val workManager = WorkManager.getInstance(context!!)
-        val requestBuilder = OneTimeWorkRequest.Builder(NotifyWorker::class.java)
-            .setInitialDelay(10L,TimeUnit.SECONDS)
+        //TODO:?
+        //Scheduling notification
+        val tag = UUID.randomUUID().toString()
+        //get time before alar
+        val alertTime = 1000L
+        //--
+        val data:Data = createWorkInputData(movie.title,"You were planning to watch this movie",movie.id)
+        NotifyWorker.scheduleReminder(alertTime,data,tag,context!!)
+    }
+
+    fun createWorkInputData(title:String,text:String,id:Int):Data{
+        return Data.Builder()
+            .putString(NotifyWorker.EXTRA_TITLE,title)
+            .putString(NotifyWorker.EXTRA_TEXT,text)
+            .putInt(NotifyWorker.EXTRA_ID,id)
             .build()
-        workManager.enqueue(requestBuilder)
     }
 }
