@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -15,33 +16,42 @@ import com.bumptech.glide.Glide
 import com.glebkrep.topmovies.API.MovieModel
 import com.glebkrep.topmovies.MoviesList.MoviesListAdapter
 import com.glebkrep.topmovies.R
+import com.glebkrep.topmovies.Repository.MovieItem
 
 class ScheduledMoviesAdapter internal constructor(val context: Context?, val parentFragment: Fragment) : RecyclerView.Adapter<ScheduledMoviesAdapter.ScheduledMoviesViewHolder>() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var moviesList = emptyList<MovieModel>()
+    private var moviesList = emptyList<MovieItem>()
 
     class ScheduledMoviesViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val imageImageView: ImageView = itemView.findViewById(R.id.movieListImageImageView)
-        val nameTextView: TextView = itemView.findViewById(R.id.movieListNameTextView)
-        val descriptionTextView: TextView = itemView.findViewById(R.id.movieListDescriptionTextView)
-        val ratingTextView: TextView = itemView.findViewById(R.id.movieListRatingTextView)
-        val releaseDateTextView: TextView = itemView.findViewById(R.id.movieListReleaseDateTextView)
-        val scheduleButton: Button = itemView.findViewById(R.id.movieListScheduleButton)
+        val nameTextView: TextView = itemView.findViewById(R.id.scheduledMovieNameTextView)
+        val timeTextView: TextView = itemView.findViewById(R.id.scheduledMovieTimeTextView)
+        val switch: Switch = itemView.findViewById(R.id.scheduledMovieSwitch)
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduledMoviesViewHolder {
-        val itemView = inflater.inflate(R.layout.movie_list_item,parent,false)
+        val itemView = inflater.inflate(R.layout.scheduled_movie_item,parent,false)
         return ScheduledMoviesViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: ScheduledMoviesViewHolder, position: Int) {
         val current = moviesList[position]
+        holder.nameTextView.text = current.title
 
+        //TODO: util
+        holder.timeTextView.text = current.scheduledTime.toString()
 
+        //TODO: not sure
+        if (current.isActive){
+            holder.switch.right = Switch.FOCUS_RIGHT
+
+        }
+        else{
+            holder.switch.left = Switch.FOCUS_LEFT
+        }
     }
 
-    internal fun setMoviesList(moviesList:List<MovieModel>){
+    internal fun setMoviesList(moviesList:List<MovieItem>){
         this.moviesList = moviesList
         notifyDataSetChanged()
     }
@@ -51,7 +61,7 @@ class ScheduledMoviesAdapter internal constructor(val context: Context?, val par
     }
 
 
-    fun getMoviesList():List<MovieModel>{
+    fun getMoviesList():List<MovieItem>{
         return moviesList
     }
 }

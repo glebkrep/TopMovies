@@ -25,14 +25,13 @@ import java.util.*
 class MainActivityViewModel(application: Application): AndroidViewModel(application) {
     private val repository: MovieItemRepository
     val allMovieItems: LiveData<List<MovieItem>>
-    var pageToLoad:Int
+    val scheduledMovies:LiveData<List<MovieItem>>
 
     init {
-        pageToLoad = 1
         val movieItemDao = MovieItemRoomDatabase.getDatabase(application,viewModelScope).movieItemDao()
         repository = MovieItemRepository(movieItemDao)
         allMovieItems = repository.allMovies
-
+        scheduledMovies = repository.scheduledMovies
     }
 
     fun insert(movieItem: MovieItem)= viewModelScope.launch {
@@ -44,9 +43,6 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     }
 
 
-    //_----------------------------------------
-
-    //TODO: Move this to shared prefs
     private var isLoading = false
 
     fun fetchMovies(){
@@ -56,7 +52,6 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
             viewModelScope.launch(Dispatchers.Main){
                 repository.fetchMovies()
             }
-            pageToLoad++
             isLoading = false
         }
 
