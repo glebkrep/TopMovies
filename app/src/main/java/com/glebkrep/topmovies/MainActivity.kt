@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import com.glebkrep.topmovies.MoviesList.MoviesListViewModel
 
 class MainActivity : AppCompatActivity() {
     init {
@@ -18,12 +17,12 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private var instance: MainActivity? = null
-        public fun obtainMoviesListViewModel(activity: FragmentActivity): MoviesListViewModel {
+        public fun obtainViewModel(activity: FragmentActivity): MainActivityViewModel {
             // Use a Factory to inject dependencies into the ViewModel
             val factory =
                 ViewModelProvider.AndroidViewModelFactory.getInstance(activity.getApplication())
 
-            return ViewModelProvider(instance!!, factory).get(MoviesListViewModel::class.java)
+            return ViewModelProvider(instance!!, factory).get(MainActivityViewModel::class.java)
 
         }
     }

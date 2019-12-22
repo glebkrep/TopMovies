@@ -1,12 +1,14 @@
 package com.glebkrep.topmovies.Repository
 
 import android.net.Uri
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
-
+@Parcelize
 @Entity(tableName = "movie_table")
 data class MovieItem(
     @PrimaryKey
@@ -21,11 +23,15 @@ data class MovieItem(
     @ColumnInfo(name="release_date")
     val release_date:String,
     @ColumnInfo(name="poster_path")
-    val poster_path:Uri,
+    val poster_path:String?,
     @ColumnInfo(name="popularity")
     val popularity:Double,
     @ColumnInfo(name="scheduled_time")
-    val scheduledTime:Date? = null,
+    val scheduledTime:Long? = null,
     @ColumnInfo(name="is_active")
-    val isActive:Boolean = false
-)
+    val isActive:Boolean = false,
+    @ColumnInfo(name = "page")
+    val page:Int,
+    @ColumnInfo(name="time_loaded")
+    val timeLoaded:Long = System.currentTimeMillis()
+):Parcelable

@@ -15,11 +15,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.glebkrep.topmovies.API.MovieModel
 import com.glebkrep.topmovies.R
+import com.glebkrep.topmovies.Repository.MovieItem
+import org.w3c.dom.Text
 import retrofit2.http.Url
 
 class MoviesListAdapter internal constructor(val context: Context?, val parentFragment: Fragment) : RecyclerView.Adapter<MoviesListAdapter.MoviesListViewHolder>() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var moviesList = emptyList<MovieModel>()
+    private var moviesList = emptyList<MovieItem>()
 
     class MoviesListViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
         val imageImageView: ImageView = itemView.findViewById(R.id.movieListImageImageView)
@@ -28,6 +30,8 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
         val ratingTextView:TextView = itemView.findViewById(R.id.movieListRatingTextView)
         val releaseDateTextView:TextView = itemView.findViewById(R.id.movieListReleaseDateTextView)
         val scheduleButton:Button = itemView.findViewById(R.id.movieListScheduleButton)
+        val page:TextView = itemView.findViewById(R.id.movieListPageTextView)
+        val popularity:TextView = itemView.findViewById(R.id.movieListPopularityTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesListViewHolder {
@@ -41,6 +45,8 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
         holder.descriptionTextView.text = current.overview
         holder.ratingTextView.text = (current.vote_average*10).toString()
         holder.releaseDateTextView.text = current.release_date
+        holder.popularity.text = current.popularity.toString()
+        holder.page.text = current.page.toString()
 
         Glide.with(parentFragment)
             .load("https://image.tmdb.org/t/p/w500/"+current.poster_path)
@@ -51,14 +57,14 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
         holder.scheduleButton.setOnClickListener {
             //TODO:pass id
             val argumentsBundle : Bundle = Bundle()
-            argumentsBundle.putParcelable("movieModel",current)
+            argumentsBundle.putParcelable("movieItem",current)
 
 
             findNavController(parentFragment).navigate(R.id.action_moviesListFragment_to_scheduledMoviesFragment,argumentsBundle)
         }
     }
 
-    internal fun setMoviesList(moviesList:List<MovieModel>){
+    internal fun setMoviesList(moviesList:List<MovieItem>){
         this.moviesList = moviesList
         notifyDataSetChanged()
     }
@@ -68,7 +74,7 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
     }
 
 
-    fun getMoviesList():List<MovieModel>{
+    fun getMoviesList():List<MovieItem>{
         return moviesList
     }
 }
