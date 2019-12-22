@@ -9,5 +9,19 @@
         android:id="@+id/moviesListFragment"
         android:name="com.glebkrep.topmovies.MoviesList.MoviesListFragment"
         android:label="fragment_movies_list"
-        tools:layout="@layout/fragment_movies_list" />
+        tools:layout="@layout/fragment_movies_list" >
+        <action
+            android:id="@+id/action_moviesListFragment_to_scheduledMoviesFragment"
+            app:destination="@id/scheduledMoviesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/scheduledMoviesFragment"
+        android:name="com.glebkrep.topmovies.ScheduledMovies.ScheduledMoviesFragment"
+        android:label="fragment_scheduled_movies"
+        tools:layout="@layout/fragment_scheduled_movies" >
+        <action
+            android:id="@+id/action_scheduledMoviesFragment_to_moviesListFragment"
+            app:destination="@id/moviesListFragment"
+            app:popUpTo="@+id/moviesListFragment" />
+    </fragment>
 </navigation>
