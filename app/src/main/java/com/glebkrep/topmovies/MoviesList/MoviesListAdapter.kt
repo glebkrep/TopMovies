@@ -41,8 +41,8 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
 
         Glide.with(parentFragment)
             .load("https://image.tmdb.org/t/p/w500/"+current.poster_path)
-            .placeholder(R.drawable.ic_launcher_background)
-            .error(R.drawable.ic_launcher_foreground)
+            .placeholder(R.color.colorAccent)
+            .error(R.color.colorPrimaryDark)
             .into(holder.imageImageView)
     }
 
