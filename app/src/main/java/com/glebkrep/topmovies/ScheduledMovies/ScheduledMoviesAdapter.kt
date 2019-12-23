@@ -1,6 +1,8 @@
 package com.glebkrep.topmovies.ScheduledMovies
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.graphics.toColor
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
@@ -17,15 +21,17 @@ import com.glebkrep.topmovies.API.MovieModel
 import com.glebkrep.topmovies.MoviesList.MoviesListAdapter
 import com.glebkrep.topmovies.R
 import com.glebkrep.topmovies.Repository.MovieItem
+import com.glebkrep.topmovies.Utils.MyUtils
 
 class ScheduledMoviesAdapter internal constructor(val context: Context?, val parentFragment: Fragment) : RecyclerView.Adapter<ScheduledMoviesAdapter.ScheduledMoviesViewHolder>() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var moviesList = emptyList<MovieItem>()
+    private val curTime = System.currentTimeMillis()
 
     class ScheduledMoviesViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.scheduledMovieNameTextView)
         val timeTextView: TextView = itemView.findViewById(R.id.scheduledMovieTimeTextView)
-        val switch: Switch = itemView.findViewById(R.id.scheduledMovieSwitch)
+        val card :CardView  = itemView.findViewById(R.id.scheduledMovieCard)
 
     }
 
@@ -38,16 +44,15 @@ class ScheduledMoviesAdapter internal constructor(val context: Context?, val par
         val current = moviesList[position]
         holder.nameTextView.text = current.title
 
-        //TODO: util
-        holder.timeTextView.text = current.scheduledTime.toString()
+        holder.timeTextView.text = MyUtils.convertMillisToDate(current.scheduledTime!!)
 
-        //TODO: not sure
-        if (current.isActive){
-            holder.switch.isChecked = true
 
+        if (!current.isActive){
+            holder.card.setCardBackgroundColor(Color.parseColor("#8F8A7D7D"))
         }
         else{
-            holder.switch.isChecked = false
+            holder.card.setCardBackgroundColor(Color.parseColor("#81C784"))
+
         }
     }
 

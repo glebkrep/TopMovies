@@ -28,6 +28,7 @@ class MoviesListFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         viewModel = MainActivity.obtainViewModel(activity!!)
+        viewModel.start()
         return inflater.inflate(R.layout.fragment_movies_list, container, false)
     }
 
@@ -38,7 +39,6 @@ class MoviesListFragment : Fragment() {
         val adapter = MoviesListAdapter(context,this)
         movies_list_recycle_view.layoutManager = LinearLayoutManager(context)
         movies_list_recycle_view.adapter = adapter
-
 
         viewModel.allMovieItems.observe(this, Observer {
             adapter.setMoviesList(it)

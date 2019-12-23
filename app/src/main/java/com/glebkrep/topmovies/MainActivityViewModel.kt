@@ -57,49 +57,24 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
 
 
     }
+    fun start(){
+        if(allMovieItems.value.isNullOrEmpty()){
+            fetchMovies()
+        }
+        else if (!scheduledMovies.value.isNullOrEmpty()){
+            val currentTime = System.currentTimeMillis()
+            checkSheduled(currentTime)
+        }
 
-
-
-
-//    private suspend fun downloadImageForUri(posterPath:String):Uri{
-//        //TODO: make function
-//        withContext(Dispatchers.IO){
-//
-//            val requestOptions = RequestOptions().override(400)
-//                .downsample(DownsampleStrategy.CENTER_INSIDE)
-//                .skipMemoryCache(true)
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//
-//            context
-//            Glide.with()
-//            mContext.get()?.let {
-//                val bitmap = Glide.with(it)
-//                    .asBitmap()
-//                    .load(uri)
-//                    .apply(requestOptions)
-//                    .submit()
-//                    .get()
-//                try {
-//
-//                    var file = File(it.filesDir, "WishItemImages")
-//                    if (!file.exists()) {
-//                        file.mkdir()
-//                    }
-//                    file = File(file, "img$wishItemId.jpg")
-//                    val out = FileOutputStream(file)
-//                    bitmap.compress(Bitmap.CompressFormat.JPEG, 75, out)
-//                    out.flush()
-//                    out.close()
-//                    val newUri = file.toUri()
-//                    changeImage(wishItemId,newImageURI = newUri.toString())
-//
-//
-//                    Log.i("MainActivityViewModel", "Image saved., old uri ${uri.toString()}, new uri ${newUri.toString()}")
-//                } catch (e: Exception) {
-//                    Log.i("MainActivityViewModel", "Failed to save image.")
-//                }
-//            }
-//        }
-//    }
+    }
+    private fun checkSheduled(time:Long){
+        viewModelScope.launch(Dispatchers.Main){
+            for (item in scheduledMovies.value!!){
+                if (item.isActive && item.scheduledTime!!<time){
+                    update(item.id,item.scheduledTime,false)
+                }
+            }
+        }
+    }
 
 }

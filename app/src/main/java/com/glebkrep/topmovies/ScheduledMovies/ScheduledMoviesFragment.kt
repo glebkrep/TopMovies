@@ -21,6 +21,7 @@ import com.glebkrep.topmovies.MainActivityViewModel
 import com.glebkrep.topmovies.Notifications.NotifyWorker
 import com.glebkrep.topmovies.R
 import com.glebkrep.topmovies.Repository.MovieItem
+import com.glebkrep.topmovies.Utils.MyUtils
 import kotlinx.android.synthetic.main.fragment_scheduled_movies.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -57,8 +58,6 @@ class ScheduledMoviesFragment : Fragment() {
         viewModel.scheduledMovies.observe(this,Observer{
             adapter.setMoviesList(it)
         })
-
-
 
     }
 
@@ -106,12 +105,7 @@ class ScheduledMoviesFragment : Fragment() {
 
     }
     fun addToScheduled(movie:MovieItem,year:Int,month:Int,day:Int,hour:Int,minute:Int){
-        //todo: add
-
-        //TODO:?
         //Scheduling notification
-        val tag = UUID.randomUUID().toString()
-        //get time before alar
         var curTime = System.currentTimeMillis()
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR,year)
@@ -122,12 +116,21 @@ class ScheduledMoviesFragment : Fragment() {
         var scheduledTime = calendar.timeInMillis
         val alertTime = scheduledTime - curTime
 
+        val tag = (movie.id+scheduledTime).toString()
 
-        viewModel.update(movie.id,scheduledTime,true)
+        if (alertTime<0){
+            Toast.makeText(context!!,"wrong time, try again",Toast.LENGTH_LONG).show()
+        }
+        else{
+            if (movie.scheduledTime!=null){
+                NotifyWorker.cancelReminder(tag,context!!)
+            }
 
-        //--
-        val data:Data = createWorkInputData(movie.title,"You were planning to watch this movie",movie.id)
-        NotifyWorker.scheduleReminder(alertTime,data,tag,context!!)
-        Toast.makeText(context!!,"time before ntf: ${alertTime/1000} seconds",Toast.LENGTH_LONG).show()
+            viewModel.update(movie.id,scheduledTime,true)
+
+            val data:Data = createWorkInputData(movie.title,"You were planning to watch this movie",movie.id)
+            NotifyWorker.scheduleReminder(alertTime,data,tag,context!!)
+        }
+
     }
 }

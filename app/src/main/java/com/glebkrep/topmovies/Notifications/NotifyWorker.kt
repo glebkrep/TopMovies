@@ -51,7 +51,6 @@ public class NotifyWorker(context: Context,params:WorkerParameters ):Worker(cont
         const val EXTRA_TEXT = "text"
         const val EXTRA_ID = "id"
 
-        //TODO: might be an instance bug try something close to dao thingy
         fun scheduleReminder(duration:Long,data: Data,tag:String,mContext: Context){
             val notificationWork = OneTimeWorkRequest.Builder(NotifyWorker::class.java)
                 .setInitialDelay(duration,TimeUnit.MILLISECONDS)
