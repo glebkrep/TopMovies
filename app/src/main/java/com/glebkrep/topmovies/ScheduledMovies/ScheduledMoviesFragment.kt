@@ -1,6 +1,8 @@
 package com.glebkrep.topmovies.ScheduledMovies
 
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -44,7 +46,7 @@ class ScheduledMoviesFragment : Fragment() {
         if (arguments?.containsKey("movieItem") ?: false){
             val newMovie = arguments!!["movieItem"] as MovieItem
             Toast.makeText(context,newMovie.title,Toast.LENGTH_SHORT).show()
-            addToScheduled(newMovie)
+            getDateAndTime(newMovie)
         }
 
         val adapter = ScheduledMoviesAdapter(context,this)
@@ -60,24 +62,72 @@ class ScheduledMoviesFragment : Fragment() {
 
     }
 
-    fun addToScheduled(movie:MovieItem){
-        //todo: add
-
-        //TODO:?
-        //Scheduling notification
-        val tag = UUID.randomUUID().toString()
-        //get time before alar
-        val alertTime = 1000L
-        //--
-        val data:Data = createWorkInputData(movie.title,"You were planning to watch this movie",movie.id)
-        NotifyWorker.scheduleReminder(alertTime,data,tag,context!!)
-    }
-
     fun createWorkInputData(title:String,text:String,id:Int):Data{
         return Data.Builder()
             .putString(NotifyWorker.EXTRA_TITLE,title)
             .putString(NotifyWorker.EXTRA_TEXT,text)
             .putInt(NotifyWorker.EXTRA_ID,id)
             .build()
+    }
+    fun getDateAndTime(movie:MovieItem){
+        val calendar = Calendar.getInstance()
+        var mYear = calendar.get(Calendar.YEAR)
+        var mMonth = calendar.get(Calendar.MONTH)
+        var mDay = calendar.get(Calendar.DAY_OF_MONTH)
+        var mHour = calendar.get(Calendar.HOUR_OF_DAY)
+        var mMinute = calendar.get(Calendar.MINUTE)
+
+        val datePickerDialog = DatePickerDialog(context!!,
+            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                //after date picked
+                mYear = year
+                mMonth = monthOfYear
+                mDay = dayOfMonth
+                val timePickerDialog = TimePickerDialog(context!!,
+                    TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+                        //after time picked
+                        mHour = hourOfDay
+                        mMinute = minute
+
+                        //all got set notif
+                        addToScheduled(movie,mYear,mMonth,mDay,mHour,mMinute)
+
+                    }, mHour, mMinute, false)
+
+
+                timePickerDialog.show()
+            }, mYear, mMonth, mDay)
+
+
+
+
+        datePickerDialog.show()
+
+
+    }
+    fun addToScheduled(movie:MovieItem,year:Int,month:Int,day:Int,hour:Int,minute:Int){
+        //todo: add
+
+        //TODO:?
+        //Scheduling notification
+        val tag = UUID.randomUUID().toString()
+        //get time before alar
+        var curTime = System.currentTimeMillis()
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR,year)
+        calendar.set(Calendar.MONTH,month)
+        calendar.set(Calendar.DAY_OF_MONTH,day)
+        calendar.set(Calendar.HOUR_OF_DAY,hour)
+        calendar.set(Calendar.MINUTE,minute)
+        var scheduledTime = calendar.timeInMillis
+        val alertTime = scheduledTime - curTime
+
+
+        viewModel.update(movie.id,scheduledTime,true)
+
+        //--
+        val data:Data = createWorkInputData(movie.title,"You were planning to watch this movie",movie.id)
+        NotifyWorker.scheduleReminder(alertTime,data,tag,context!!)
+        Toast.makeText(context!!,"time before ntf: ${alertTime/1000} seconds",Toast.LENGTH_LONG).show()
     }
 }

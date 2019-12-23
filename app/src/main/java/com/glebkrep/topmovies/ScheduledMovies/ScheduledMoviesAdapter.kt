@@ -43,11 +43,11 @@ class ScheduledMoviesAdapter internal constructor(val context: Context?, val par
 
         //TODO: not sure
         if (current.isActive){
-            holder.switch.right = Switch.FOCUS_RIGHT
+            holder.switch.isChecked = true
 
         }
         else{
-            holder.switch.left = Switch.FOCUS_LEFT
+            holder.switch.isChecked = false
         }
     }
 

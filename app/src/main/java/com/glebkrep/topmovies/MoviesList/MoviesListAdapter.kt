@@ -9,15 +9,11 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigator
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.glebkrep.topmovies.API.MovieModel
 import com.glebkrep.topmovies.R
 import com.glebkrep.topmovies.Repository.MovieItem
-import org.w3c.dom.Text
-import retrofit2.http.Url
 
 class MoviesListAdapter internal constructor(val context: Context?, val parentFragment: Fragment) : RecyclerView.Adapter<MoviesListAdapter.MoviesListViewHolder>() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -30,8 +26,8 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
         val ratingTextView:TextView = itemView.findViewById(R.id.movieListRatingTextView)
         val releaseDateTextView:TextView = itemView.findViewById(R.id.movieListReleaseDateTextView)
         val scheduleButton:Button = itemView.findViewById(R.id.movieListScheduleButton)
-        val page:TextView = itemView.findViewById(R.id.movieListPageTextView)
-        val popularity:TextView = itemView.findViewById(R.id.movieListPopularityTextView)
+        val scheduledTime:TextView = itemView.findViewById(R.id.movieScheduledTimeTextView)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesListViewHolder {
@@ -45,8 +41,7 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
         holder.descriptionTextView.text = current.overview
         holder.ratingTextView.text = (current.vote_average*10).toString()
         holder.releaseDateTextView.text = current.release_date
-        holder.popularity.text = current.popularity.toString()
-        holder.page.text = current.page.toString()
+        holder.scheduledTime.text = current.scheduledTime.toString()
 
         Glide.with(parentFragment)
             .load("https://image.tmdb.org/t/p/w500/"+current.poster_path)
@@ -55,7 +50,6 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
             .into(holder.imageImageView)
 
         holder.scheduleButton.setOnClickListener {
-            //TODO:pass id
             val argumentsBundle : Bundle = Bundle()
             argumentsBundle.putParcelable("movieItem",current)
 

@@ -23,7 +23,7 @@ interface MovieItemDao {
     suspend fun deleteAll()
 
 
-    @Query("select * from movie_table where scheduled_time!=null order by scheduled_time desc")
+    @Query("select * from movie_table where scheduled_time>0 order by scheduled_time desc")
     fun getScheduledMovies():LiveData<List<MovieItem>>
 
 
