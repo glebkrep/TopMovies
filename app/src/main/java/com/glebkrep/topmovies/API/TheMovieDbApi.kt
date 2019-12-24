@@ -9,13 +9,9 @@ import retrofit2.http.Query
 
 
 interface TheMovieDbApi {
-
     @GET("discover/movie/")
     fun discoverMoviesAsync(@Query("sort_by") sortBy:String = "popularity.desc",
                   @Query("language") language:String = "en-US",
                   @Query("primary_release_year")year:String = "2019",
                   @Query("page") page:Int=1): Deferred<Response<MovieResponse>>
-
-    //    Call<JokeModel> getData(@Query("CType") int typeInt);
-
 }

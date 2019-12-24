@@ -1,10 +1,5 @@
 package com.glebkrep.topmovies.API
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-import java.util.*
-
-
 data class MovieModel(
     val id: Int,
     val vote_average: Double,

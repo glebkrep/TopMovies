@@ -1,7 +1,6 @@
 package com.glebkrep.topmovies.MoviesList
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
@@ -23,6 +21,7 @@ import com.glebkrep.topmovies.Utils.MyUtils
 class MoviesListAdapter internal constructor(val context: Context?, val parentFragment: Fragment) : RecyclerView.Adapter<MoviesListAdapter.MoviesListViewHolder>() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var moviesList = emptyList<MovieItem>()
+    private val posterPathStart = "https://image.tmdb.org/t/p/w500/"
 
     class MoviesListViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
         val imageImageView: ImageView = itemView.findViewById(R.id.movieListImageImageView)
@@ -50,12 +49,12 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
             holder.scheduledTime.visibility = View.VISIBLE
             holder.scheduleButton.visibility = View.GONE
             if (current.isActive){
-                holder.scheduledTime.text = "Scheduled: "+MyUtils.convertMillisToDate(current.scheduledTime!!)
-                holder.movieCard.setCardBackgroundColor(Color.parseColor("#81C784"))
+                holder.scheduledTime.text = MyUtils.scheduledConvert(current.scheduledTime!!)
+                holder.movieCard.setCardBackgroundColor(Color.parseColor(context!!.getString(R.string.myGreen)))
             }
             else{
-                holder.scheduledTime.text = "Watched: "+MyUtils.convertMillisToDate(current.scheduledTime!!)
-                holder.movieCard.setCardBackgroundColor(Color.parseColor("#8F8A7D7D"))
+                holder.scheduledTime.text = MyUtils.watchedConvert(current.scheduledTime!!)
+                holder.movieCard.setCardBackgroundColor(Color.parseColor(context!!.getString(R.string.myGrey)))
             }
 
             holder.scheduledTime.setOnClickListener {
@@ -69,7 +68,7 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
         }
 
         Glide.with(parentFragment)
-            .load("https://image.tmdb.org/t/p/w500/"+current.poster_path)
+            .load(posterPathStart+current.poster_path)
             .centerCrop()
             .placeholder(R.color.colorAccent)
             .error(R.color.colorPrimaryDark)
@@ -78,8 +77,6 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
         holder.scheduleButton.setOnClickListener {
             val argumentsBundle : Bundle = Bundle()
             argumentsBundle.putParcelable("movieItem",current)
-
-
             findNavController(parentFragment).navigate(R.id.action_moviesListFragment_to_scheduledMoviesFragment,argumentsBundle)
         }
     }

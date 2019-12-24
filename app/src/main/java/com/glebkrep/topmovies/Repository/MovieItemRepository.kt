@@ -1,6 +1,8 @@
 package com.glebkrep.topmovies.Repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.work.impl.utils.LiveDataUtils
 import com.glebkrep.topmovies.API.MovieModel
 import com.glebkrep.topmovies.API.RetrofitClient
 import java.lang.Exception
@@ -10,6 +12,7 @@ class MovieItemRepository(private val movieItemDao: MovieItemDao){
 
     val allMovies: LiveData<List<MovieItem>> = movieItemDao.getMoviesForList()
     val scheduledMovies: LiveData<List<MovieItem>> = movieItemDao.getScheduledMovies()
+    val troublesConnecting: MutableLiveData<Boolean> = MutableLiveData()
 
     suspend fun insert(movieItem: MovieItem){
         movieItemDao.insert(movieItem)
@@ -31,10 +34,11 @@ class MovieItemRepository(private val movieItemDao: MovieItemDao){
             val movies = movieResponse?.results
             convertMovies(movies!!,page)
 
-
+            troublesConnecting.postValue(false)
         }
         catch (e: Exception){
             e.printStackTrace()
+            troublesConnecting.postValue(true)
         }
     }
     private suspend fun convertMovies(movieModels:List<MovieModel>, page:Int){

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">TopMovies</string>
+    <string name="myGreen">#81C784</string>
+    <string name="myGrey">#8F8A7D7D</string>
+    <string name="notificationText">You were planning to watch this movie</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

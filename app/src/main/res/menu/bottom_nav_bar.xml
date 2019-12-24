@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_to_list"
+        android:icon="@drawable/ic_list_movies"
+        android:title="List"
+        app:showAsAction="ifRoom|withText"></item>
+
+    <item
+        android:id="@+id/nav_to_scheduled"
+        android:icon="@drawable/ic_scheduled_movies"
+        android:title="Scheduled"
+        app:showAsAction="ifRoom|withText">
+
+    </item>
+</menu>

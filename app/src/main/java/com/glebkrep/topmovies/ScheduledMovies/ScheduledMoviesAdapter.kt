@@ -26,7 +26,6 @@ import com.glebkrep.topmovies.Utils.MyUtils
 class ScheduledMoviesAdapter internal constructor(val context: Context?, val parentFragment: Fragment) : RecyclerView.Adapter<ScheduledMoviesAdapter.ScheduledMoviesViewHolder>() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var moviesList = emptyList<MovieItem>()
-    private val curTime = System.currentTimeMillis()
 
     class ScheduledMoviesViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.scheduledMovieNameTextView)
@@ -48,11 +47,10 @@ class ScheduledMoviesAdapter internal constructor(val context: Context?, val par
 
 
         if (!current.isActive){
-            holder.card.setCardBackgroundColor(Color.parseColor("#8F8A7D7D"))
+            holder.card.setCardBackgroundColor(Color.parseColor(context!!.getString(R.string.myGrey)))
         }
         else{
-            holder.card.setCardBackgroundColor(Color.parseColor("#81C784"))
-
+            holder.card.setCardBackgroundColor(Color.parseColor(context!!.getString(R.string.myGreen)))
         }
     }
 
@@ -65,8 +63,4 @@ class ScheduledMoviesAdapter internal constructor(val context: Context?, val par
         return moviesList.size
     }
 
-
-    fun getMoviesList():List<MovieItem>{
-        return moviesList
-    }
 }

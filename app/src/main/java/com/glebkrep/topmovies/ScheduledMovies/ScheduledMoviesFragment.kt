@@ -4,12 +4,11 @@ package com.glebkrep.topmovies.ScheduledMovies
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
@@ -26,9 +25,7 @@ import kotlinx.android.synthetic.main.fragment_scheduled_movies.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-/**
- * A simple [Fragment] subclass.
- */
+
 class ScheduledMoviesFragment : Fragment() {
 
     private lateinit var viewModel:MainActivityViewModel
@@ -68,6 +65,7 @@ class ScheduledMoviesFragment : Fragment() {
             .putInt(NotifyWorker.EXTRA_ID,id)
             .build()
     }
+
     fun getDateAndTime(movie:MovieItem){
         val calendar = Calendar.getInstance()
         var mYear = calendar.get(Calendar.YEAR)
@@ -87,22 +85,12 @@ class ScheduledMoviesFragment : Fragment() {
                         //after time picked
                         mHour = hourOfDay
                         mMinute = minute
-
-                        //all got set notif
+                        //set notif
                         addToScheduled(movie,mYear,mMonth,mDay,mHour,mMinute)
-
                     }, mHour, mMinute, false)
-
-
                 timePickerDialog.show()
             }, mYear, mMonth, mDay)
-
-
-
-
         datePickerDialog.show()
-
-
     }
     fun addToScheduled(movie:MovieItem,year:Int,month:Int,day:Int,hour:Int,minute:Int){
         //Scheduling notification
@@ -125,12 +113,11 @@ class ScheduledMoviesFragment : Fragment() {
             if (movie.scheduledTime!=null){
                 NotifyWorker.cancelReminder(tag,context!!)
             }
-
             viewModel.update(movie.id,scheduledTime,true)
-
-            val data:Data = createWorkInputData(movie.title,"You were planning to watch this movie",movie.id)
+            val data:Data = createWorkInputData(movie.title,getString(R.string.notificationText),movie.id)
             NotifyWorker.scheduleReminder(alertTime,data,tag,context!!)
         }
 
     }
+
 }

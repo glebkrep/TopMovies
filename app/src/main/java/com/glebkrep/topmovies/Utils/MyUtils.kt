@@ -9,7 +9,11 @@ object MyUtils {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = millis
         return formatter.format(calendar.time)
-
-
+    }
+    fun scheduledConvert(millis: Long):String{
+        return "Scheduled: "+ convertMillisToDate(millis)
+    }
+    fun watchedConvert(millis: Long):String{
+        return "Watched: " + convertMillisToDate(millis)
     }
 }

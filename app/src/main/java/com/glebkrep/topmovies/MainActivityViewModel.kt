@@ -26,12 +26,13 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     private val repository: MovieItemRepository
     val allMovieItems: LiveData<List<MovieItem>>
     val scheduledMovies:LiveData<List<MovieItem>>
-
+    val troublesConnecting:MutableLiveData<Boolean>
     init {
         val movieItemDao = MovieItemRoomDatabase.getDatabase(application,viewModelScope).movieItemDao()
         repository = MovieItemRepository(movieItemDao)
         allMovieItems = repository.allMovies
         scheduledMovies = repository.scheduledMovies
+        troublesConnecting = repository.troublesConnecting
     }
 
     fun insert(movieItem: MovieItem)= viewModelScope.launch {
@@ -75,6 +76,10 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
                 }
             }
         }
+    }
+
+    fun troubleConnectingRecieved(){
+        repository.troublesConnecting.postValue(false)
     }
 
 }
