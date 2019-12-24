@@ -18,24 +18,25 @@ import com.glebkrep.topmovies.R
 import com.glebkrep.topmovies.Repository.MovieItem
 import com.glebkrep.topmovies.Utils.MyUtils
 
-class MoviesListAdapter internal constructor(val context: Context?, val parentFragment: Fragment) : RecyclerView.Adapter<MoviesListAdapter.MoviesListViewHolder>() {
+class MoviesListAdapter internal constructor(val context: Context?, val parentFragment: Fragment) :
+    RecyclerView.Adapter<MoviesListAdapter.MoviesListViewHolder>() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var moviesList = emptyList<MovieItem>()
     private val posterPathStart = "https://image.tmdb.org/t/p/w500/"
 
-    class MoviesListViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
+    class MoviesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageImageView: ImageView = itemView.findViewById(R.id.movieListImageImageView)
         val nameTextView: TextView = itemView.findViewById(R.id.movieListNameTextView)
-        val descriptionTextView:TextView = itemView.findViewById(R.id.movieListDescriptionTextView)
-        val ratingTextView:TextView = itemView.findViewById(R.id.movieListRatingTextView)
-        val releaseDateTextView:TextView = itemView.findViewById(R.id.movieListReleaseDateTextView)
-        val scheduleButton:Button = itemView.findViewById(R.id.movieListScheduleButton)
-        val scheduledTime:TextView = itemView.findViewById(R.id.movieScheduledTimeTextView)
-        val movieCard:CardView = itemView.findViewById(R.id.movieListCard)
+        val descriptionTextView: TextView = itemView.findViewById(R.id.movieListDescriptionTextView)
+        val ratingTextView: TextView = itemView.findViewById(R.id.movieListRatingTextView)
+        val releaseDateTextView: TextView = itemView.findViewById(R.id.movieListReleaseDateTextView)
+        val scheduleButton: Button = itemView.findViewById(R.id.movieListScheduleButton)
+        val scheduledTime: TextView = itemView.findViewById(R.id.movieScheduledTimeTextView)
+        val movieCard: CardView = itemView.findViewById(R.id.movieListCard)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesListViewHolder {
-        val itemView = inflater.inflate(R.layout.movie_list_item,parent,false)
+        val itemView = inflater.inflate(R.layout.movie_list_item, parent, false)
         return MoviesListViewHolder(itemView)
     }
 
@@ -43,45 +44,46 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
         val current = moviesList[position]
         holder.nameTextView.text = current.title
         holder.descriptionTextView.text = current.overview
-        holder.ratingTextView.text = (current.vote_average*10).toInt().toString()
+        holder.ratingTextView.text = (current.vote_average * 10).toInt().toString()+"%"
         holder.releaseDateTextView.text = current.release_date
-        if (current.scheduledTime!=null){
+        if (current.scheduledTime != null) {
             holder.scheduledTime.visibility = View.VISIBLE
             holder.scheduleButton.visibility = View.GONE
-            if (current.isActive){
-                holder.scheduledTime.text = MyUtils.scheduledConvert(current.scheduledTime!!)
+            if (current.isActive) {
+                holder.scheduledTime.text = MyUtils.scheduledConvert(current.scheduledTime)
                 holder.movieCard.setCardBackgroundColor(Color.parseColor(context!!.getString(R.string.myGreen)))
-            }
-            else{
-                holder.scheduledTime.text = MyUtils.watchedConvert(current.scheduledTime!!)
+            } else {
+                holder.scheduledTime.text = MyUtils.watchedConvert(current.scheduledTime)
                 holder.movieCard.setCardBackgroundColor(Color.parseColor(context!!.getString(R.string.myGrey)))
             }
 
             holder.scheduledTime.setOnClickListener {
                 findNavController(parentFragment).navigate(R.id.action_moviesListFragment_to_scheduledMoviesFragment)
             }
-        }
-        else{
-            holder.scheduledTime.visibility=View.GONE
+        } else {
+            holder.scheduledTime.visibility = View.GONE
             holder.scheduleButton.visibility = View.VISIBLE
             holder.movieCard.setCardBackgroundColor(Color.parseColor("#FFFFFFFF"))
         }
 
         Glide.with(parentFragment)
-            .load(posterPathStart+current.poster_path)
+            .load(posterPathStart + current.poster_path)
             .centerCrop()
             .placeholder(R.color.colorAccent)
             .error(R.color.colorPrimaryDark)
             .into(holder.imageImageView)
 
         holder.scheduleButton.setOnClickListener {
-            val argumentsBundle : Bundle = Bundle()
-            argumentsBundle.putParcelable("movieItem",current)
-            findNavController(parentFragment).navigate(R.id.action_moviesListFragment_to_scheduledMoviesFragment,argumentsBundle)
+            val argumentsBundle: Bundle = Bundle()
+            argumentsBundle.putParcelable("movieItem", current)
+            findNavController(parentFragment).navigate(
+                R.id.action_moviesListFragment_to_scheduledMoviesFragment,
+                argumentsBundle
+            )
         }
     }
 
-    internal fun setMoviesList(moviesList:List<MovieItem>){
+    internal fun setMoviesList(moviesList: List<MovieItem>) {
         this.moviesList = moviesList
         notifyDataSetChanged()
     }
@@ -91,7 +93,7 @@ class MoviesListAdapter internal constructor(val context: Context?, val parentFr
     }
 
 
-    fun getMoviesList():List<MovieItem>{
+    fun getMoviesList(): List<MovieItem> {
         return moviesList
     }
 }

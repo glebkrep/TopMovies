@@ -3,13 +3,11 @@ package com.glebkrep.topmovies.MoviesList
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.glebkrep.topmovies.MainActivity
@@ -19,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_movies_list.*
 
 class MoviesListFragment : Fragment() {
 
-    private lateinit var viewModel:MainActivityViewModel
+    private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,14 +33,14 @@ class MoviesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = MoviesListAdapter(context,this)
+        val adapter = MoviesListAdapter(context, this)
         movies_list_recycle_view.layoutManager = LinearLayoutManager(context)
         movies_list_recycle_view.adapter = adapter
         noConnectionImage.visibility = View.GONE
 
         viewModel.allMovieItems.observe(this, Observer {
             adapter.setMoviesList(it)
-            if (it.isNotEmpty()){
+            if (it.isNotEmpty()) {
                 //everything is fine
                 progressBar.visibility = View.GONE
                 noConnectionImage.visibility = View.GONE
@@ -50,10 +48,10 @@ class MoviesListFragment : Fragment() {
         })
 
         viewModel.troublesConnecting.observe(this, Observer {
-            if (it){
+            if (it) {
                 viewModel.troubleConnectingRecieved()
-                if (viewModel.allMovieItems.value?.isEmpty() ?: true){
-                    Toast.makeText(context!!,"network problem",Toast.LENGTH_SHORT).show()
+                if (viewModel.allMovieItems.value?.isEmpty() != false) {
+                    Toast.makeText(context!!, "network problem", Toast.LENGTH_SHORT).show()
                     noConnectionImage.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
                 }

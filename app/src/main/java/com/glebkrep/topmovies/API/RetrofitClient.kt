@@ -14,11 +14,11 @@ object RetrofitClient {
     private const val BASE_URL = "https://api.themoviedb.org/3/"
     private const val API_KEY = "ad01326516c128ab12be57034ae74b1f"
 
-    private val authInterceptor = Interceptor{
+    private val authInterceptor = Interceptor {
         val newUrl = it.request().url()
             .newBuilder()
-                //adding api key to every request
-            .addQueryParameter("api_key",API_KEY)
+            //adding api key to every request
+            .addQueryParameter("api_key", API_KEY)
             .build()
 
         val newRequest = it.request()
@@ -34,8 +34,7 @@ object RetrofitClient {
         .build()
 
 
-
-    val instanse:TheMovieDbApi by lazy{
+    val instanse: TheMovieDbApi by lazy {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
